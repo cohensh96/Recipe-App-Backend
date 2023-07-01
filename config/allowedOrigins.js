@@ -1,5 +1,6 @@
 const allowedOrigins = [
-    'https://recipesforeveryone.onrender.com'
+    'https://recipesforeveryone.onrender.com',
+    'https://eshneor.com'
  
 ];
 
