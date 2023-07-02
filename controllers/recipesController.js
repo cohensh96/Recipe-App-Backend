@@ -1,7 +1,8 @@
 const Recipe = require('../models/Recipes');
 const Comment = require('../models/Comments');
 const ROLES_LIST = require('../config/rolesList');
-
+const path = require('path');
+const fs = require('fs').promises;
 
 const getAllRecipes = async (req,res) => {
     try {
@@ -81,11 +82,16 @@ const createRecipe = async(req,res) => {
         !req?.body?.recipeTime ||
         !req.file
         )
-        return res.status(400).json({"message" : "Missing required fields in order to continue."})
+        {
+            await fs.unlink(path.join(__dirname,"..","uploads",req.fileName));
+            return res.status(400).json({"message" : "Missing required fields in order to continue."})
+        }
     if (isNaN(req.body.recipecallories)) 
+    {
+        await fs.unlink(path.join(__dirname,"..","uploads",req.fileName));
         return res.status(400).json({"message" : "Recipe callorias must be number!"})
+    }
     try {
-        console.log(req.fileName)
         const result = await Recipe.create({
             author: req.user,
             recipeName: req.body.recipename,
