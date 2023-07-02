@@ -14,7 +14,7 @@ const router = express.Router();
  */
 const verifyRoles = require('../middleware/verifyRoles');
 const ROLES_LIST = require('../config/rolesList');
-const verifyJWT = require('../middleware/verifyJWT');
+const verifyJWT = require('../middleware/verfiyJWT');
 
 /**
  * Importing the commentsController from the '../controllers/commentController' file.
