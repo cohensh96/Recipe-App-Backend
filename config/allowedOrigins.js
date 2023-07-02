@@ -7,7 +7,7 @@ const allowedOrigins = [
     'https://www.recipe-app-tkss15.vercel.app',
     'https://recipesforeveryone.vercel.app',
     'https://www.eshneor.com',
-    'http://localhost:3000'
+    'https://eshneor.com'
 ]
 
 
