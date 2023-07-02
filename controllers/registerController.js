@@ -1,6 +1,12 @@
 const User = require("../models/Users");
 const bcrypt = require('bcrypt')
-
+/**
+ * Registers a new user.
+ * Requires various fields in the request body, including username, password, first name, last name, email, and password confirmation.
+ * Validates the request body for missing fields and checks for duplicated usernames and emails.
+ * Hashes the password using bcrypt and creates a new user document in the database.
+ * Returns a success message indicating that the user has been registered.
+ */
 const registerUser = async (req,res) => {
     try {
         if(req?.body === undefined)

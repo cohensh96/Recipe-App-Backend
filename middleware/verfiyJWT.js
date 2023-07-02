@@ -1,5 +1,11 @@
 const jwt = require('jsonwebtoken');
-
+/**
+ * Middleware function to verify and decode a JSON Web Token (JWT) from the request headers.
+ * Extracts the JWT from the 'Authorization' or 'authorization' header.
+ * Verifies the JWT using the provided secret and handles the decoded payload.
+ * Sets the user information and roles from the decoded payload to the request object.
+ * Calls the next() function to pass the request to the next middleware.
+ */
 const verifyJWT = (req, res, next) => {
     const authHeader = req.headers.authorization || req.headers.Authorization;
     if (!authHeader?.startsWith('Bearer ')) return res.sendStatus(401);

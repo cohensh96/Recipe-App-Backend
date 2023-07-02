@@ -1,8 +1,16 @@
+/**
+ * Importing the necessary modules and models required for authentication and authorization.
+ */
+
 const User = require('../models/Users');
 const bcrypt = require('bcrypt');
-const { response } = require('express');
 const jwt = require('jsonwebtoken');
 
+/**
+ * Creates a JWT access token for the provided user information.
+ * The user information is passed as an object to the 'userInfo' parameter.
+ * Returns the generated JWT access token.
+ */
 const createToken = (userInfo) => {
     return jwt.sign(
         {"UserInfo":userInfo},
@@ -10,6 +18,12 @@ const createToken = (userInfo) => {
         { expiresIn: '1h' }
     );
 }
+
+/**
+ * Handles the logout functionality.
+ * Invalidates the refresh token for the logged-in user, clears the JWT cookie,
+ * and sends a response with a status of 204 (No Content).
+ */
 
 const handleLogout = async(req,res) => 
 {
@@ -27,6 +41,13 @@ const handleLogout = async(req,res) =>
     res.clearCookie('jwt', { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
     res.sendStatus(204);
 }
+
+/**
+ * Handles the refresh token functionality.
+ * Verifies the provided refresh token, checks if the corresponding user exists,
+ * and generates a new access token.
+ * Sends a response with the user roles and the new access token.
+ */
 const handleRefresh = async(req,res) => {
     const cookies = req.cookies;
 
@@ -60,6 +81,12 @@ const handleRefresh = async(req,res) => {
     );
     
 }
+
+/**
+ * Handles the login functionality.
+ * Verifies the provided username and password, generates an access token and a refresh token,
+ * saves the refresh token to the user document, and sends a response with the access token and user roles.
+ */
 
 const handleLogin = async(req,res) => {
     try {

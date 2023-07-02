@@ -3,13 +3,22 @@ const Recipe = require('../models/Recipes');
 const Comment = require('../models/Comments');
 const bcrypt = require('bcrypt');
 
+/**
+ * Retrieves all users from the database.
+ * Returns an array of user objects.
+ */
 const getAllUsers = async(req,res) => {
     const users = await User.find();
     if(!users)
         return res.status(204).json({"message":"No users found"});
     res.json(users);
 }
-
+/**
+ * Deletes a user with the provided id.
+ * Requires the user id to be passed in the request body.
+ * Deletes all associated comments and recipes by the user.
+ * Returns the deletion result.
+ */
 const deleteUser = async(req,res) => {
     if(!req?.body?.id)
         return res.status(400).json({"message":"User ID required"});
@@ -31,7 +40,12 @@ const deleteUser = async(req,res) => {
         res.status(500).json({"message":error.message});
     }
 }
-
+/**
+ * Edits the roles of a user with the provided id.
+ * Requires the user id to be passed in the request body.
+ * Allows updating the roles field of the user.
+ * Returns the updated user object.
+ */
 const editRolesUser = async(req,res) => {
     if(!req?.body?.id)
         return res.status(400).json({"message":"User ID required"});
@@ -44,7 +58,12 @@ const editRolesUser = async(req,res) => {
     const result = await user.save();
     res.json(result);
 }
-
+/**
+ * Retrieves the JWT token for the authenticated user.
+ * Requires the user to be logged in.
+ * Retrieves the user from the database based on the username.
+ * Returns the user object with the password and refresh token fields set to "SECRET" for security reasons.
+ */
 const getUserJWT = async(req,res) => {
     if(!req.user)
         return res.status(400).json({ "message": 'User must be logged in' });
@@ -58,7 +77,11 @@ const getUserJWT = async(req,res) => {
     user.refreshToken = "SECERT-REFRESH";
     res.json(user);
 }
-
+/**
+ * Retrieves a user with the provided id.
+ * Requires the user id to be passed as a parameter in the request.
+ * Returns the user object with the password and refresh token fields set to "SECRET" for security reasons.
+ */
 const getUser = async(req,res) => {
     if(!req.params?.id)
         return res.status(400).json({ "message": 'User ID required' });
@@ -73,7 +96,13 @@ const getUser = async(req,res) => {
     console.log(user)
     res.json(user);
 }
-
+/**
+ * Updates a user with the provided data.
+ * Requires the user id to be passed in the request body.
+ * Allows updating various fields of the user, such as password, first name, last name, and confirm.
+ * Hashes the new password using bcrypt before saving it to the database.
+ * Returns the updated user object.
+ */
 const updateUser = async (req, res) => {
     if(req?.body === undefined)
         return res.status(404).json({"message":"Missing few fields in user data."});

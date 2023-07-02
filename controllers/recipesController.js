@@ -4,6 +4,10 @@ const ROLES_LIST = require('../config/rolesList');
 const path = require('path');
 const fs = require('fs').promises;
 
+/**
+ * Retrieves all recipes.
+ * Returns an array of recipes.
+ */
 const getAllRecipes = async (req,res) => {
     try {
         const recipes = await Recipe.find(); // returns all found recipes.
@@ -14,6 +18,11 @@ const getAllRecipes = async (req,res) => {
         res.status(500).json({"message":error.message});
     }
 }
+/**
+ * Retrieves the average rating of recipes posted by the authenticated user.
+ * Requires the user to be logged in.
+ * Returns the average rating as a response.
+ */
 const getUserAvarage = async(req,res) => {
     if(!req.user)
         return res.status(404).json({"message":"user is logged out"});
@@ -40,6 +49,12 @@ const getUserAvarage = async(req,res) => {
         res.status(500).json({"message":error.message});
     }
 }
+/**
+ * Retrieves recipes posted by the authenticated user.
+ * Requires the user to be logged in.
+ * Optionally accepts a limit parameter to limit the number of recipes returned.
+ * Returns an array of user recipes.
+ */
 const getUserRecipes = async(req,res) => {
     if(!req.user)
         return res.status(404).json({"message":"user is logged out"});
@@ -56,7 +71,10 @@ const getUserRecipes = async(req,res) => {
         res.status(500).json({"message":error.message});
     }
 }
-
+/**
+ * Retrieves the best-rated recipes.
+ * Returns an array of best-rated recipes, sorted in descending order based on the recipe rating.
+ */
 const getBestRecipes = async(req,res) => {
     try {
         const recipes = await Recipe.find()
@@ -70,7 +88,12 @@ const getBestRecipes = async(req,res) => {
         res.status(500).json({"message":error.message});
     }
 }
-
+/**
+ * Creates a new recipe.
+ * Requires various fields in the request body, including recipe name, description, ingredients, difficulty, calories, category, time, and an image file.
+ * Validates the request body and creates a new recipe document in the database.
+ * Returns the created recipe.
+ */
 const createRecipe = async(req,res) => {
     if(
         !req?.body?.recipename ||
@@ -108,7 +131,13 @@ const createRecipe = async(req,res) => {
         res.status(500).json({"message": error.message}); 
     }
 }
-
+/**
+ * Updates a recipe with the provided id.
+ * Requires the recipe id to be passed in the request body.
+ * Only the recipe author can update their own recipe.
+ * Allows updating various fields of the recipe, including name, description, ingredients, category, difficulty, time, and calories.
+ * Returns the updated recipe.
+ */
 
 const updateRecipe = async(req,res) => {
     if(!req?.body?.id)
@@ -148,6 +177,12 @@ const updateRecipe = async(req,res) => {
     }
 }
 
+/**
+ * Deletes a recipe with the provided id.
+ * Requires the recipe id to be passed in the request body.
+ * Only the recipe author or an admin can delete a recipe.
+ * Deletes all associated comments and returns the deletion result.
+ */
 const deleteRecipe = async(req,res) => {
     if(!req?.body?.id) 
         return res.status(400).json({'message': "Recipe id required"});
@@ -173,7 +208,11 @@ const deleteRecipe = async(req,res) => {
         res.status(500).json({"message":error.message});
     }
 }
-
+/**
+ * Retrieves a single recipe with the provided id.
+ * Requires the recipe id to be passed as a parameter in the request.
+ * Returns the found recipe.
+ */
 const getSingleRecipe = async (req,res) => {
     if(!req?.params?.id) 
         return res.status(400).json({'message': "Recipe id required"});
