@@ -63,7 +63,9 @@ const createRecipe = async(req,res) => {
         !req?.body?.recipeTime ||
         !req.file
         )
-        return res.status(400).json({"message" : "Missing required fields in order to continue"})
+        return res.status(400).json({"message" : "Missing required fields in order to continue."})
+    if (isNaN(req.body.recipecallories)) 
+        return res.status(400).json({"message" : "Recipe callorias must be number!"})
     const {path:image} = req.file;
     try {
         const result = await Recipe.create({
@@ -100,6 +102,9 @@ const updateRecipe = async(req,res) => {
     {
         return res.status(401).json({"message": `You have no permissions to edit the recipe`}); 
     }
+
+    if (isNaN(req.body.recipecallories)) 
+    return res.status(400).json({"message" : "Recipe callorias must be number!"})
 
     if(req.body?.recipeName)        findRecipe.recipeName = req.body.recipeName;
     if(req.body?.recipeDescription) findRecipe.recipeDescription = req.body.recipeDescription

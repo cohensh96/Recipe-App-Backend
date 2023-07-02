@@ -26,6 +26,7 @@ const RecipeSchema = new Schema({
     },
     recipeCallories: {
         type:Number,
+      
     },
     recipeTime: {
         type:String,
