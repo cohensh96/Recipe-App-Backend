@@ -4,6 +4,7 @@ const usersController = require('../controllers/usersController');
 
 const verifyRoles = require('../middleware/verifyRoles');
 const ROLES_LIST = require('../config/rolesList');
+const verifyJWT = require('../middleware/verfiyJWT');
 
 /**
  * Route: /users
@@ -13,8 +14,8 @@ const ROLES_LIST = require('../config/rolesList');
 // PUT /users
 // Route for retrieving and updating user information
 
-router.route('/').get(usersController.getUserJWT)
-                 .put(usersController.updateUser);
+router.route('/').get(verifyJWT,usersController.getUserJWT)
+                 .put(verifyJWT,usersController.updateUser);
 /**
  * Route: /users/handle
  */
@@ -25,9 +26,9 @@ router.route('/').get(usersController.getUserJWT)
 // Route for handling user management operations (only accessible by admins)
 
 router.route('/handle')
-.get(verifyRoles(ROLES_LIST.Admin),usersController.getAllUsers)
-.put(verifyRoles(ROLES_LIST.Admin), usersController.editRolesUser)
-.delete(verifyRoles(ROLES_LIST.Admin), usersController.deleteUser);
+.get(verifyJWT,verifyRoles(ROLES_LIST.Admin),usersController.getAllUsers)
+.put(verifyJWT,verifyRoles(ROLES_LIST.Admin), usersController.editRolesUser)
+.delete(verifyJWT,verifyRoles(ROLES_LIST.Admin), usersController.deleteUser);
 
 /**
  * Route: /users/:id
@@ -36,7 +37,7 @@ router.route('/handle')
 // GET /users/:id
 // Route for retrieving user information by ID (only accessible by admins)
 
-router.route('/:id').get(verifyRoles(ROLES_LIST.Admin), usersController.getUser);
+router.route('/:id').get(verifyJWT,verifyRoles(ROLES_LIST.Admin), usersController.getUser);
 
 
 module.exports = router;

@@ -21,7 +21,6 @@ const PORT = process.env.SERVER_PORT || 3500;
 // Connect to the Mongodb.
 connectDB();
 
-const verifyJWT = require('./middleware/verfiyJWT')
 
 /*****************************
  *        Middleware.
@@ -44,7 +43,6 @@ app.use('/logout', require('./routes/logout'));
 app.use('/refresh', require('./routes/refresh'));
 app.use('/recipe', require('./routes/recipes'));
 app.use('/comments', require('./routes/comments'));
-app.use(verifyJWT);
 app.use('/user', require('./routes/users'));
 
 
