@@ -28,13 +28,14 @@ const deleteUser = async(req,res) => {
         return res.status(204).json({ 'message': `User ID ${req.body.id} not found` });
     }
     try {
-        const deleteComments = await Comment.deleteMany({author: user.username});
+        await Comment.deleteMany({author: user.username});
         const userRecipes = await Recipe.find({author: user.username});
         
         await Promise.all(userRecipes.map( async(recipe) => {
-            const deleteRecipeComments =  await Comment.deleteMany({recipeId:recipe._id});
+            await Comment.deleteMany({recipeId:recipe._id});
         }));
-        const result = await Recipe.deleteMany({author: user.username});
+        await Recipe.deleteMany({author: user.username});
+        const result = await user.deleteOne();
         res.json(result);
     } catch (error) {
         res.status(500).json({"message":error.message});
