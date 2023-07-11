@@ -1,10 +1,7 @@
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
-/**
- * Configuration for file upload using Multer.
- * Defines the storage destination and file naming conventions.
- */
+
 const storage = multer.diskStorage({
     destination: (req,file,cb) => {
         if(!fs.existsSync(path.join(__dirname, "..", 'uploads')))

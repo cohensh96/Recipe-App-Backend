@@ -3,6 +3,13 @@ const Comment = require('../models/Comments');
 const ROLES_LIST = require('../config/rolesList');
 const path = require('path');
 const fs = require('fs').promises;
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
 
 /**
  * Retrieves all recipes.
@@ -95,6 +102,8 @@ const getBestRecipes = async(req,res) => {
  * Returns the created recipe.
  */
 const createRecipe = async(req,res) => {
+    console.log(req.body);
+    console.log(req.file);
     if(
         !req?.body?.recipename ||
         !req?.body?.recipedescription||
@@ -106,27 +115,35 @@ const createRecipe = async(req,res) => {
         !req.file
         )
         {
-            await fs.unlink(path.join(__dirname,"..","uploads",req.fileName));
+           // await fs.unlink(path.join(__dirname,"..","uploads",req.fileName));
             return res.status(400).json({"message" : "Missing required fields in order to continue."})
         }
     if (isNaN(req.body.recipecallories)) 
     {
-        await fs.unlink(path.join(__dirname,"..","uploads",req.fileName));
+        //await fs.unlink(path.join(__dirname,"..","uploads",req.fileName));
         return res.status(400).json({"message" : "Recipe callorias must be number!"})
     }
     try {
-        const result = await Recipe.create({
-            author: req.user,
-            recipeName: req.body.recipename,
-            recipeDescription: req.body.recipedescription,
-            recipeIngredients: req.body.recipeingredients,
-            recipeCategorys: req.body.recipecatagorys,
-            recipeDifficulty: req.body.recipedifficulty,
-            recipeCallories: req.body.recipecallories,
-            recipeTime: req.body.recipeTime,
-            Image: req.fileName
-        });
-        res.status(201).json(result);
+        cloudinary.uploader.upload(path.join(__dirname, "..", "uploads", req.fileName),cloudinaryDone);
+        async function cloudinaryDone(error, result) {
+            if (error) {
+            console.log("Error in cloudinary.uploader.upload_stream\n", error);
+            return;
+            }
+            const resultRecipe = await Recipe.create({
+                author: req.user,
+                recipeName: req.body.recipename,
+                recipeDescription: req.body.recipedescription,
+                recipeIngredients: req.body.recipeingredients,
+                recipeCategorys: req.body.recipecatagorys,
+                recipeDifficulty: req.body.recipedifficulty,
+                recipeCallories: req.body.recipecallories,
+                recipeTime: req.body.recipeTime,
+                Image: result.url
+            });
+            res.status(201).json(resultRecipe);
+        }
+
     } catch (error) {
         res.status(500).json({"message": error.message}); 
     }

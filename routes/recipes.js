@@ -30,10 +30,9 @@ const uniqeFile = require('../middleware/uniqeFile')
 
 router.route('/')
     .get(recipeController.getAllRecipes)
-    .post(uniqeFile,upload.single('uploadedImage'), verifyJWT, recipeController.createRecipe)
+    .post(uniqeFile, verifyJWT,upload.single('uploadedImage'), recipeController.createRecipe)
     .put(verifyJWT,recipeController.updateRecipe)
     .delete(verifyJWT,recipeController.deleteRecipe);
-
 /**
  * Route: /recipes/top
  */
