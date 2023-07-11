@@ -4,7 +4,7 @@
 /node_modules
 .env
 /uploads
-
+readme.txt
 # misc
 
 npm-debug.log*

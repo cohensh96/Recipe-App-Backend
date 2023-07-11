@@ -102,8 +102,6 @@ const getBestRecipes = async(req,res) => {
  * Returns the created recipe.
  */
 const createRecipe = async(req,res) => {
-    console.log(req.body);
-    console.log(req.file);
     if(
         !req?.body?.recipename ||
         !req?.body?.recipedescription||
